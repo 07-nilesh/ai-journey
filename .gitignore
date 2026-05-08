@@ -1,0 +1,14 @@
+# Python bytecode (the stuff in your push)
+__pycache__/
+*.py[cod]
+
+# Logs (unless you want to keep them)
+*.log
+
+# Virtual environments
+venv/
+env/
+.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/

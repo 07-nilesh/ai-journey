@@ -1,0 +1,3 @@
+Day 19: Mastering File I/O!
+Goal: Build a Startup in Indore.
+Update: Just finished the first code example.

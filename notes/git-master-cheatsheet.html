@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git Master Cheatsheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2128;
+    --border: rgba(255,255,255,0.08);
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --orange: #f0883e;
+    --purple: #bc8cff;
+    --red: #ff7b72;
+    --yellow: #d29922;
+    --teal: #39d353;
+    --pink: #f778ba;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+  }
+  .hero {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.25);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .stat { display: flex; flex-direction: column; }
+  .stat-num { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .controls {
+    padding: 1.25rem 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 380px;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+  #search {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px 8px 36px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #search:focus { border-color: var(--accent); }
+  #search::placeholder { color: var(--muted); }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    background: transparent;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text); border-color: var(--border); }
+  .tab.active { background: var(--accent); color: #0d1117; border-color: var(--accent); }
+  .main { padding: 1.5rem 2rem 3rem; max-width: 1400px; margin: 0 auto; }
+  .section { margin-bottom: 2.5rem; }
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .section-count {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 2px 8px;
+    margin-left: auto;
+    font-weight: 600;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 10px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 2px 0 0 2px;
+    background: var(--card-accent, var(--accent));
+  }
+  .card:hover { border-color: rgba(88,166,255,0.3); transform: translateY(-1px); }
+  .card-cmd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--card-accent, var(--accent));
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .card-cmd code { flex: 1; word-break: break-all; }
+  .copy-btn {
+    width: 24px; height: 24px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    color: var(--muted);
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .copy-btn.copied { border-color: var(--green); color: var(--green); }
+  .card-meaning {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .card-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .card-when {
+    margin-top: 8px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 5px 8px;
+    line-height: 1.5;
+    border-left: 2px solid var(--card-accent, var(--accent));
+  }
+  .card-when strong { color: var(--text); font-weight: 600; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+  }
+  .no-results {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px;
+  }
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    border-left: 3px solid var(--yellow);
+  }
+  .tip-card h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 6px; color: var(--yellow); }
+  .tip-card p { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+  .tip-card code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--surface2);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+  .workflow-steps {
+    display: flex;
+    gap: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .wf-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    min-width: 180px;
+    flex: 1;
+    position: relative;
+  }
+  .wf-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: 700;
+    z-index: 2;
+  }
+  .wf-step:not(:first-child) { margin-left: 18px; }
+  .wf-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .wf-title { font-size: 0.875rem; font-weight: 700; margin-bottom: 6px; }
+  .wf-cmd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    line-height: 1.7;
+  }
+  .hidden { display: none !important; }
+  @media (max-width: 600px) {
+    .hero { padding: 1.5rem 1rem 1.25rem; }
+    .controls { padding: 1rem; }
+    .main { padding: 1rem 1rem 2rem; }
+    .grid { grid-template-columns: 1fr; }
+    .workflow-steps { flex-direction: column; gap: 10px; }
+    .wf-step:not(:last-child)::after { display: none; }
+    .wf-step:not(:first-child) { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">⚡ Master Reference</div>
+  <h1>Git <span>Cheatsheet</span></h1>
+  <p>Every command you need — with plain-English explanations, real use cases, and pro tips. Go from beginner to confident daily user.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num" id="total-count">75+</span><span class="stat-label">Commands</span></div>
+    <div class="stat"><span class="stat-num">12</span><span class="stat-label">Categories</span></div>
+    <div class="stat"><span class="stat-num">20+</span><span class="stat-label">Pro Tips</span></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Search commands..." autocomplete="off">
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-cat="all">All</button>
+    <button class="tab" data-cat="setup">Setup</button>
+    <button class="tab" data-cat="basics">Basics</button>
+    <button class="tab" data-cat="staging">Staging</button>
+    <button class="tab" data-cat="branch">Branching</button>
+    <button class="tab" data-cat="remote">Remote</button>
+    <button class="tab" data-cat="undo">Undo</button>
+    <button class="tab" data-cat="stash">Stash</button>
+    <button class="tab" data-cat="log">Log</button>
+    <button class="tab" data-cat="advanced">Advanced</button>
+    <button class="tab" data-cat="tips">Tips</button>
+  </div>
+</div>
+
+<div class="main">
+<div id="no-results" class="no-results hidden">No commands found. Try a different search term.</div>
+
+<!-- DAILY WORKFLOW -->
+<section class="section" data-section="tips">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(210,153,34,0.15)">🔄</div>
+    <div class="section-title">Daily Git Workflow (The Loop)</div>
+  </div>
+  <div class="workflow-steps">
+    <div class="wf-step">
+      <div class="wf-num">Step 1</div>
+      <div class="wf-title">Pull latest</div>
+      <div class="wf-cmd">git pull origin main</div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-num">Step 2</div>
+      <div class="wf-title">Create branch</div>
+      <div class="wf-cmd">git checkout -b feature/my-feature</div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-num">Step 3</div>
+      <div class="wf-title">Code → Stage</div>
+      <div class="wf-cmd">git add .<br>git status</div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-num">Step 4</div>
+      <div class="wf-title">Commit</div>
+      <div class="wf-cmd">git commit -m "feat: add login"</div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-num">Step 5</div>
+      <div class="wf-title">Push</div>
+      <div class="wf-cmd">git push origin feature/my-feature</div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-num">Step 6</div>
+      <div class="wf-title">Open PR / Merge</div>
+      <div class="wf-cmd">→ Pull Request on GitHub/GitLab</div>
+    </div>
+  </div>
+</section>
+
+<!-- SETUP -->
+<section class="section" data-section="setup">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(63,185,80,0.15)">⚙️</div>
+    <div class="section-title">Setup & Configuration</div>
+    <span class="section-count">8 commands</span>
+  </div>
+  <div class="grid" id="grid-setup"></div>
+</section>
+
+<!-- BASICS -->
+<section class="section" data-section="basics">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(88,166,255,0.15)">📁</div>
+    <div class="section-title">Getting Started</div>
+    <span class="section-count">5 commands</span>
+  </div>
+  <div class="grid" id="grid-basics"></div>
+</section>
+
+<!-- STAGING & COMMITS -->
+<section class="section" data-section="staging">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(188,140,255,0.15)">📦</div>
+    <div class="section-title">Staging & Commits</div>
+    <span class="section-count">12 commands</span>
+  </div>
+  <div class="grid" id="grid-staging"></div>
+</section>
+
+<!-- BRANCHING -->
+<section class="section" data-section="branch">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(240,136,62,0.15)">🌿</div>
+    <div class="section-title">Branching & Merging</div>
+    <span class="section-count">14 commands</span>
+  </div>
+  <div class="grid" id="grid-branch"></div>
+</section>
+
+<!-- REMOTE -->
+<section class="section" data-section="remote">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(87,211,255,0.15)">🌐</div>
+    <div class="section-title">Remote Repositories</div>
+    <span class="section-count">9 commands</span>
+  </div>
+  <div class="grid" id="grid-remote"></div>
+</section>
+
+<!-- UNDO -->
+<section class="section" data-section="undo">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(255,123,114,0.15)">↩️</div>
+    <div class="section-title">Undoing Changes</div>
+    <span class="section-count">10 commands</span>
+  </div>
+  <div class="grid" id="grid-undo"></div>
+</section>
+
+<!-- STASH -->
+<section class="section" data-section="stash">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(247,120,186,0.15)">🗄️</div>
+    <div class="section-title">Stashing</div>
+    <span class="section-count">7 commands</span>
+  </div>
+  <div class="grid" id="grid-stash"></div>
+</section>
+
+<!-- LOG & HISTORY -->
+<section class="section" data-section="log">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(210,153,34,0.15)">🔍</div>
+    <div class="section-title">Log & History</div>
+    <span class="section-count">9 commands</span>
+  </div>
+  <div class="grid" id="grid-log"></div>
+</section>
+
+<!-- ADVANCED -->
+<section class="section" data-section="advanced">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(63,185,80,0.15)">🚀</div>
+    <div class="section-title">Advanced & Power Commands</div>
+    <span class="section-count">10 commands</span>
+  </div>
+  <div class="grid" id="grid-advanced"></div>
+</section>
+
+<!-- TIPS -->
+<section class="section" data-section="tips">
+  <div class="section-head">
+    <div class="section-icon" style="background:rgba(210,153,34,0.15)">💡</div>
+    <div class="section-title">Pro Tips & Best Practices</div>
+  </div>
+  <div class="tips-grid" id="grid-tips"></div>
+</section>
+
+</div>
+
+<script>
+const DATA = {
+  setup: {
+    accent: '#3fb950',
+    commands: [
+      { cmd: 'git config --global user.name "Your Name"', meaning: 'Set your identity (name)', desc: 'Tells Git who you are. This name appears in every commit you make.', when: 'Run once after installing Git on a new machine.' },
+      { cmd: 'git config --global user.email "you@email.com"', meaning: 'Set your identity (email)', desc: 'Your email is attached to all commits. Use the same one as your GitHub/GitLab account.', when: 'Run once after installing Git.' },
+      { cmd: 'git config --global core.editor "code --wait"', meaning: 'Set default text editor', desc: 'Choose which editor opens when Git needs you to write a message (e.g., merge commits).', when: 'Set once to avoid getting stuck in Vim.' },
+      { cmd: 'git config --list', meaning: 'See all Git settings', desc: 'Lists every configuration value Git is currently using — global + local project settings.', when: 'To verify your settings are correct.' },
+      { cmd: 'git config --global alias.st status', meaning: 'Create a command shortcut (alias)', desc: 'Lets you type git st instead of git status. You can alias any command you use often.', when: 'To speed up your workflow. Popular: st, co, br, lg.' },
+      { cmd: 'git config --global core.autocrlf input', meaning: 'Fix line ending issues (Mac/Linux)', desc: 'Prevents Windows-style line endings (CRLF) from sneaking into your commits on Mac/Linux.', when: 'Set once on Mac/Linux. Use "true" on Windows.' },
+      { cmd: 'git config --global init.defaultBranch main', meaning: 'Set default branch name', desc: 'Makes new repos start with "main" instead of "master" (modern convention).', when: 'Set once globally after installing Git.' },
+      { cmd: 'git config --global --edit', meaning: 'Open global config in editor', desc: 'Opens the .gitconfig file directly so you can edit all settings at once.', when: 'When you want to review or bulk-edit your Git config.' }
+    ]
+  },
+  basics: {
+    accent: '#58a6ff',
+    commands: [
+      { cmd: 'git init', meaning: 'Start a new Git repository', desc: 'Creates a hidden .git folder in your directory — turns any folder into a Git repo.', when: 'When starting a brand new project from scratch locally.' },
+      { cmd: 'git clone <url>', meaning: 'Copy a remote repo to your machine', desc: 'Downloads the entire repo including all history, branches, and files.', when: 'When joining an existing project or working from GitHub/GitLab.' },
+      { cmd: 'git clone <url> <folder-name>', meaning: 'Clone into a custom folder name', desc: 'Same as clone but puts the repo in a folder you name instead of the repo name.', when: 'When you want a shorter or custom local folder name.' },
+      { cmd: 'git status', meaning: 'See what\'s changed in your repo', desc: 'Shows untracked files, staged changes, and unstaged changes. Your most-used command.', when: 'Constantly — before every add, commit, push. Always run this first.' },
+      { cmd: 'git help <command>', meaning: 'Get help for any command', desc: 'Opens the full manual for any Git command in your browser or terminal.', when: 'When you\'re unsure about options for a command.' }
+    ]
+  },
+  staging: {
+    accent: '#bc8cff',
+    commands: [
+      { cmd: 'git add <file>', meaning: 'Stage a specific file', desc: 'Adds a file to the "staging area" — preparing it to be included in the next commit.', when: 'When you only want to commit changes from specific files.' },
+      { cmd: 'git add .', meaning: 'Stage ALL changed files', desc: 'Stages every changed and new file in the current directory and subdirectories.', when: 'When you want to commit everything you\'ve changed.' },
+      { cmd: 'git add -p', meaning: 'Stage changes interactively (hunk by hunk)', desc: 'Lets you review and choose exactly which parts (hunks) of each file to stage. Very powerful.', when: 'When you made multiple unrelated changes in one file and want separate commits.' },
+      { cmd: 'git diff', meaning: 'See unstaged changes', desc: 'Shows exactly what changed line-by-line in files not yet staged. Green = added, Red = removed.', when: 'Before git add, to review what you\'re about to stage.' },
+      { cmd: 'git diff --staged', meaning: 'See staged changes (before commit)', desc: 'Shows what\'s in the staging area — what will be committed if you run git commit now.', when: 'After git add, to double-check before committing.' },
+      { cmd: 'git commit -m "message"', meaning: 'Save staged changes with a message', desc: 'Creates a snapshot (commit) with all staged changes. The message describes what changed and why.', when: 'After staging your changes. Write clear, descriptive messages!' },
+      { cmd: 'git commit -am "message"', meaning: 'Stage + commit tracked files in one step', desc: 'Combines git add and git commit for already-tracked files. Does NOT add brand new untracked files.', when: 'Quick commits when you\'ve modified existing files (not new files).' },
+      { cmd: 'git commit --amend', meaning: 'Fix the last commit', desc: 'Lets you edit the message or add more changes to the most recent commit. Rewrites history.', when: 'When you made a typo in the message or forgot to include a file. Only before pushing!' },
+      { cmd: 'git commit --amend --no-edit', meaning: 'Add to last commit without changing message', desc: 'Stage new changes and fold them into the last commit silently.', when: 'When you forgot a small change and want it in the last commit.' },
+      { cmd: 'git restore <file>', meaning: 'Discard unstaged changes in a file', desc: 'Reverts an unstaged file back to its last committed state. Permanently discards your edits.', when: 'When you made a mistake and want to throw away changes to a specific file.' },
+      { cmd: 'git restore --staged <file>', meaning: 'Unstage a file', desc: 'Removes a file from staging area but keeps your changes in the working directory.', when: 'When you accidentally staged something you didn\'t mean to.' },
+      { cmd: 'git rm <file>', meaning: 'Delete a file and stage the deletion', desc: 'Removes the file from disk AND stages that removal so it\'s included in your next commit.', when: 'When you want to permanently delete a tracked file from the project.' }
+    ]
+  },
+  branch: {
+    accent: '#f0883e',
+    commands: [
+      { cmd: 'git branch', meaning: 'List all local branches', desc: 'Shows every local branch. The asterisk (*) marks the branch you\'re currently on.', when: 'To see what branches exist and where you are.' },
+      { cmd: 'git branch -a', meaning: 'List ALL branches (local + remote)', desc: 'Shows local branches AND remote tracking branches (like origin/main).', when: 'To see all branches across local and remote.' },
+      { cmd: 'git branch <name>', meaning: 'Create a new branch', desc: 'Creates a new branch at your current commit but doesn\'t switch to it.', when: 'When you want to name a branch separately before switching.' },
+      { cmd: 'git checkout -b <name>', meaning: 'Create AND switch to new branch', desc: 'Creates a new branch and immediately moves you to it — the most common way to start a feature.', when: 'Every time you start working on a new feature, bugfix, or experiment.' },
+      { cmd: 'git switch <branch>', meaning: 'Switch to an existing branch', desc: 'Moves you to another branch. Safer modern alternative to git checkout for switching.', when: 'When switching between feature branches during development.' },
+      { cmd: 'git checkout <branch>', meaning: 'Switch branches (classic method)', desc: 'Switches to another branch. Also used to restore files (that\'s why switch was introduced).', when: 'Works exactly like git switch. Use whichever you prefer.' },
+      { cmd: 'git merge <branch>', meaning: 'Merge a branch into current branch', desc: 'Combines the history of another branch into your current branch. Creates a merge commit.', when: 'After a feature is done — to bring it into main/develop.' },
+      { cmd: 'git merge --no-ff <branch>', meaning: 'Merge with forced merge commit', desc: 'Always creates a merge commit even if fast-forward is possible. Preserves branch history.', when: 'When you want a clear record that a feature branch was merged.' },
+      { cmd: 'git merge --squash <branch>', meaning: 'Squash branch into single commit', desc: 'Combines all commits from a branch into one staged change, then you commit it manually.', when: 'To keep main branch history clean with atomic feature commits.' },
+      { cmd: 'git rebase <branch>', meaning: 'Replay commits on top of another branch', desc: 'Moves your commits to start from the tip of another branch. Creates a linear history.', when: 'To keep your feature branch up-to-date with main cleanly. Avoid on shared branches.' },
+      { cmd: 'git rebase -i HEAD~3', meaning: 'Interactive rebase (edit last 3 commits)', desc: 'Opens an editor to squash, reorder, rename, or drop the last 3 commits. Very powerful.', when: 'Before merging to clean up messy commit history (squash WIP commits).' },
+      { cmd: 'git branch -d <name>', meaning: 'Delete a merged branch', desc: 'Safely deletes a branch only if it has already been merged. Prevents accidental data loss.', when: 'After a feature is merged — clean up old branches.' },
+      { cmd: 'git branch -D <name>', meaning: 'Force delete a branch', desc: 'Deletes a branch even if it has unmerged commits. Be careful — work may be lost.', when: 'When you abandon a feature branch and don\'t need the changes.' },
+      { cmd: 'git cherry-pick <commit-hash>', meaning: 'Apply a specific commit to current branch', desc: 'Takes any single commit from any branch and applies it to where you are now.', when: 'When you need one specific fix from another branch without merging everything.' }
+    ]
+  },
+  remote: {
+    accent: '#57d3ff',
+    commands: [
+      { cmd: 'git remote -v', meaning: 'List remote connections', desc: 'Shows all remotes and their URLs (fetch and push). "origin" is the default remote name.', when: 'To verify your remote is set up correctly.' },
+      { cmd: 'git remote add origin <url>', meaning: 'Connect local repo to remote', desc: 'Links your local repo to a remote (like GitHub). "origin" is the conventional name.', when: 'After git init, to connect to GitHub/GitLab for the first time.' },
+      { cmd: 'git fetch origin', meaning: 'Download remote changes (don\'t merge)', desc: 'Pulls down all remote changes and updates remote tracking branches, but doesn\'t touch your local code.', when: 'To check what changed on remote before deciding to merge.' },
+      { cmd: 'git pull', meaning: 'Fetch + merge remote changes', desc: 'Downloads remote changes AND immediately merges them into your current branch. = fetch + merge.', when: 'At the start of your workday to get teammates\' latest changes.' },
+      { cmd: 'git pull --rebase', meaning: 'Fetch + rebase instead of merge', desc: 'Like git pull but replays your commits on top of remote changes. Keeps history cleaner.', when: 'When you want a linear history without merge commits on pull.' },
+      { cmd: 'git push origin <branch>', meaning: 'Upload commits to remote', desc: 'Sends your local branch commits to the remote repository so others can see your work.', when: 'After committing, to share your work or back it up.' },
+      { cmd: 'git push -u origin <branch>', meaning: 'Push and set upstream tracking', desc: 'Pushes to remote and sets up tracking so future git push/pull work without specifying branch.', when: 'First time pushing a new local branch to remote.' },
+      { cmd: 'git push --force-with-lease', meaning: 'Safe force push', desc: 'Force-pushes only if no one else pushed since you last fetched. Safer than --force.', when: 'After rebase or amend, to update a shared branch safely.' },
+      { cmd: 'git remote remove origin', meaning: 'Remove a remote connection', desc: 'Disconnects your local repo from the named remote. Doesn\'t delete remote data.', when: 'When changing the remote URL or cleaning up unused remotes.' }
+    ]
+  },
+  undo: {
+    accent: '#ff7b72',
+    commands: [
+      { cmd: 'git revert <commit-hash>', meaning: 'Undo a commit safely (makes new commit)', desc: 'Creates a NEW commit that reverses the changes from a specific commit. Safe for shared branches.', when: 'To undo a pushed commit without rewriting history. Best for public/shared branches.' },
+      { cmd: 'git reset --soft HEAD~1', meaning: 'Undo last commit — keep changes staged', desc: 'Moves HEAD back one commit. Your changes are kept in staging area — ready to re-commit.', when: 'When you committed too early and want to re-do it (keep changes).' },
+      { cmd: 'git reset --mixed HEAD~1', meaning: 'Undo last commit — keep changes unstaged', desc: 'Moves HEAD back one commit. Changes are kept in working directory but unstaged.', when: 'To undo a commit and re-think which files to stage.' },
+      { cmd: 'git reset --hard HEAD~1', meaning: 'Completely delete last commit + changes', desc: 'Moves HEAD back one commit AND destroys all changes. CANNOT be recovered easily.', when: 'When you want to completely discard a commit and all its changes. Be careful!' },
+      { cmd: 'git reset --hard origin/main', meaning: 'Reset local branch to match remote', desc: 'Wipes your local branch and makes it exactly like the remote. Destroys local-only commits.', when: 'When your local branch is totally messed up and you want the remote version.' },
+      { cmd: 'git restore <file>', meaning: 'Discard changes in working directory', desc: 'Throws away unstaged changes to a file. The file returns to how it was at last commit.', when: 'When you edited a file and want to throw those edits away.' },
+      { cmd: 'git clean -fd', meaning: 'Delete all untracked files and folders', desc: 'Permanently removes all files/folders that are not tracked by Git. Cannot be undone easily.', when: 'To reset your working directory to a clean state (e.g., after a bad merge).' },
+      { cmd: 'git reflog', meaning: 'See history of where HEAD has been', desc: 'Git\'s safety net. Shows EVERY position HEAD has been in, even after resets. Recover lost commits.', when: 'If you accidentally reset or lost commits — look here first!' },
+      { cmd: 'git reflog + git reset --hard <hash>', meaning: 'Recover a lost commit', desc: 'Find the lost commit hash in reflog, then reset to it to restore your work.', when: 'After accidentally using git reset --hard and losing commits.' },
+      { cmd: 'git rebase --abort', meaning: 'Cancel an in-progress rebase', desc: 'Stops a rebase and returns everything to where it was before you started.', when: 'When a rebase gets too messy with conflicts and you want to start over.' }
+    ]
+  },
+  stash: {
+    accent: '#f778ba',
+    commands: [
+      { cmd: 'git stash', meaning: 'Temporarily save uncommitted changes', desc: 'Puts all your current changes in a temporary "stash" and reverts to a clean working directory.', when: 'When you need to switch branches but aren\'t ready to commit your current work.' },
+      { cmd: 'git stash push -m "description"', meaning: 'Stash with a descriptive name', desc: 'Saves the stash with a message so you remember what was in it.', when: 'When you have multiple stashes and need to keep them organized.' },
+      { cmd: 'git stash list', meaning: 'See all saved stashes', desc: 'Lists all stashes in order. stash@{0} is the most recent.', when: 'To see what you have saved before applying or dropping.' },
+      { cmd: 'git stash pop', meaning: 'Restore latest stash and delete it', desc: 'Re-applies your most recent stash\'s changes AND removes it from the stash list.', when: 'After switching back to your original branch and ready to continue working.' },
+      { cmd: 'git stash apply stash@{2}', meaning: 'Apply a specific stash (keep it)', desc: 'Re-applies the stash but KEEPS it in the stash list. Useful to apply stash to multiple branches.', when: 'When you want to apply the same stash to several branches.' },
+      { cmd: 'git stash drop stash@{0}', meaning: 'Delete a specific stash', desc: 'Permanently removes a stash entry without applying it.', when: 'When you no longer need a saved stash.' },
+      { cmd: 'git stash clear', meaning: 'Delete ALL stashes', desc: 'Removes every stash entry. Permanent — use with caution.', when: 'To clean up all old stashes you no longer need.' }
+    ]
+  },
+  log: {
+    accent: '#d29922',
+    commands: [
+      { cmd: 'git log', meaning: 'View full commit history', desc: 'Shows all commits in reverse chronological order with hash, author, date, and message.', when: 'To see the full history of the project.' },
+      { cmd: 'git log --oneline', meaning: 'Compact one-line commit history', desc: 'Shows each commit on one line: short hash + message. Great for quick overview.', when: 'Your go-to log view for navigating history quickly.' },
+      { cmd: 'git log --oneline --graph --all', meaning: 'Visual branch history graph', desc: 'Draws an ASCII graph of all branches and merges in the history. Very informative.', when: 'To understand how branches diverged and merged over time.' },
+      { cmd: 'git log --author="name"', meaning: 'Filter commits by author', desc: 'Only shows commits made by a specific person.', when: 'To review your own commits or a teammate\'s contributions.' },
+      { cmd: 'git log --since="2 weeks ago"', meaning: 'Filter commits by date', desc: 'Shows commits from a time period. Can use "yesterday", "1 month ago", or exact dates.', when: 'To see what changed recently or in a specific time window.' },
+      { cmd: 'git log -p <file>', meaning: 'Show changes made to a specific file', desc: 'Shows all commits that changed a file along with the exact diff for each.', when: 'To understand the history of changes to a specific file.' },
+      { cmd: 'git diff <branch1>..<branch2>', meaning: 'Compare two branches', desc: 'Shows all the differences between two branches line-by-line.', when: 'Before merging to see exactly what changes will come in.' },
+      { cmd: 'git blame <file>', meaning: 'See who wrote each line', desc: 'Shows every line of a file annotated with the commit hash and author who last changed it.', when: 'To find who wrote a specific piece of code (and when).' },
+      { cmd: 'git show <commit-hash>', meaning: 'See details of a specific commit', desc: 'Displays the full diff and metadata (author, date, message) for any specific commit.', when: 'To inspect exactly what a specific commit changed.' }
+    ]
+  },
+  advanced: {
+    accent: '#3fb950',
+    commands: [
+      { cmd: 'git tag v1.0.0', meaning: 'Mark a specific commit as a release', desc: 'Creates a lightweight tag pointing to the current commit. Used for versioning releases.', when: 'When you ship a release and want to mark that point in history.' },
+      { cmd: 'git tag -a v1.0.0 -m "Release v1"', meaning: 'Create an annotated tag', desc: 'Creates a full tag object with author, date, and message — more info than lightweight tags.', when: 'For official releases that should have extra metadata.' },
+      { cmd: 'git push origin --tags', meaning: 'Push all tags to remote', desc: 'Tags don\'t push automatically with git push — you need this to share them.', when: 'After creating release tags locally.' },
+      { cmd: 'git bisect start', meaning: 'Start binary search for a bad commit', desc: 'Git binary search: you mark commits as "good" or "bad" and Git finds the first bad commit.', when: 'When a bug appeared but you don\'t know which commit introduced it.' },
+      { cmd: 'git submodule add <url>', meaning: 'Add another repo as a subdirectory', desc: 'Embeds a separate Git repo inside your repo. The submodule tracks a specific commit.', when: 'For large projects that depend on other repos as shared libraries.' },
+      { cmd: 'git worktree add <path> <branch>', meaning: 'Check out multiple branches simultaneously', desc: 'Creates a second working directory for another branch without switching away from your current one.', when: 'When you need to work on 2 branches at the same time without stashing.' },
+      { cmd: 'git shortlog -sn', meaning: 'See commit count per contributor', desc: 'Lists contributors sorted by number of commits. -s = summary, -n = sorted numerically.', when: 'For team stats, project overview, or contribution counts.' },
+      { cmd: 'git archive --format=zip HEAD > out.zip', meaning: 'Export repo as a zip archive', desc: 'Creates a zip of the repo at current HEAD without the .git folder.', when: 'To share project files with someone who doesn\'t need the Git history.' },
+      { cmd: 'git grep "search term"', meaning: 'Search text across all tracked files', desc: 'Like a regular grep but only searches files tracked by Git — faster and more targeted.', when: 'To find where a function, variable, or string is used across the codebase.' },
+      { cmd: 'git gc', meaning: 'Clean up and optimize repository', desc: 'Runs garbage collection: removes unreachable objects, compresses history, speeds up Git.', when: 'Occasionally on large repos that feel slow. Git may run this automatically.' }
+    ]
+  }
+};
+
+const TIPS = [
+  { title: '✍️ Write meaningful commit messages', text: 'Use the format: <code>type: short description</code>. Types: feat, fix, docs, style, refactor, test, chore. Example: <code>feat: add user login with JWT</code>. Future-you will be grateful.' },
+  { title: '🌿 Branch for everything', text: 'Never commit directly to <code>main</code>. Create a branch for every feature, bug fix, and experiment — even tiny ones. It keeps history clean and enables code review.' },
+  { title: '🔄 Pull before you push', text: 'Always run <code>git pull --rebase</code> before pushing to avoid unnecessary merge commits and conflicts with teammates\' changes.' },
+  { title: '📏 Commit often, commit small', text: 'Small focused commits are better than one giant commit. Each commit should do ONE thing. This makes reverting, reviewing, and debugging much easier.' },
+  { title: '🛡️ Use .gitignore from day one', text: 'Add a <code>.gitignore</code> file immediately. Never commit <code>node_modules/</code>, <code>.env</code>, <code>__pycache__</code>, IDE files, or build output. Use gitignore.io to generate one.' },
+  { title: '🔍 Review before committing', text: 'Always run <code>git diff --staged</code> before committing. Avoid committing debug logs, console.logs, or accidental test data.' },
+  { title: '⚠️ Rebase on private, merge on public', text: '<code>git rebase</code> rewrites history — only use it on your own branches that no one else has. For shared/public branches, always use <code>git merge</code>.' },
+  { title: '💾 Stash is your best friend', text: 'Never lose work by switching branches abruptly. Use <code>git stash</code> to save and <code>git stash pop</code> to restore. Always give stashes names: <code>git stash push -m "name"</code>.' },
+  { title: '🔁 Keep branches short-lived', text: 'Feature branches should live for hours to days, not weeks. Long-lived branches cause painful merge conflicts. Merge often, merge early.' },
+  { title: '🚨 git reflog is your safety net', text: 'Think you lost work after a bad reset? Run <code>git reflog</code> — it logs every position HEAD has ever been. You can almost always recover lost commits from here.' },
+  { title: '🏷️ Tag your releases', text: 'Use <code>git tag -a v1.0.0 -m "message"</code> for every release. Makes it easy to check out any past release and creates a clear version history.' },
+  { title: '📋 Use git log --oneline --graph', text: 'Alias this as <code>git lg</code> — it\'s the most useful view of your repo\'s history. Run: <code>git config --global alias.lg "log --oneline --graph --all"</code>' },
+  { title: '🚫 Never force push to main', text: '<code>git push --force</code> on shared branches destroys teammates\' work. If you must force push, use <code>--force-with-lease</code> which is much safer.' },
+  { title: '🎯 git add -p for surgical staging', text: 'Use <code>git add -p</code> to stage only specific parts of a file. This is essential for making clean, atomic commits when you\'ve made multiple changes in one file.' },
+  { title: '🤝 Conventional Commits standard', text: 'Adopt Conventional Commits (conventionalcommits.org) for your team. It enables auto-generated changelogs and clear communication. Format: <code>type(scope): description</code>' },
+  { title: '🔗 Set upstream on first push', text: 'Use <code>git push -u origin branch-name</code> the first time. After that, just <code>git push</code> and <code>git pull</code> work with no arguments.' },
+  { title: '🌐 Use SSH over HTTPS', text: 'Set up SSH keys for GitHub/GitLab. You\'ll never type a password again. Much faster and more secure than HTTPS authentication.' },
+  { title: '📝 .gitconfig aliases save time', text: 'Set aliases for your most-used commands. Suggestions: <code>st = status</code>, <code>co = checkout</code>, <code>br = branch</code>, <code>lg = log --oneline --graph --all</code>' }
+];
+
+function copyBtn(cmd) {
+  return `<button class="copy-btn" title="Copy command" onclick="copyCmd(this, \`${cmd.replace(/`/g,'\\`')}\`)">
+    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+  </button>`;
+}
+
+function copyCmd(btn, cmd) {
+  navigator.clipboard.writeText(cmd);
+  btn.classList.add('copied');
+  btn.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 20 4 15"/></svg>`;
+  setTimeout(() => {
+    btn.classList.remove('copied');
+    btn.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
+  }, 2000);
+}
+
+function makeCard(item, accent) {
+  return `<div class="card" style="--card-accent: ${accent}">
+    <div class="card-cmd"><code>${item.cmd}</code>${copyBtn(item.cmd)}</div>
+    <div class="card-meaning">${item.meaning}</div>
+    <div class="card-desc">${item.desc}</div>
+    <div class="card-when"><strong>When:</strong> ${item.when}</div>
+  </div>`;
+}
+
+function makeTipCard(tip) {
+  return `<div class="tip-card"><h4>${tip.title}</h4><p>${tip.text}</p></div>`;
+}
+
+// Render all sections
+Object.entries(DATA).forEach(([key, sec]) => {
+  const el = document.getElementById('grid-' + key);
+  if (el) el.innerHTML = sec.commands.map(c => makeCard(c, sec.accent)).join('');
+});
+document.getElementById('grid-tips').innerHTML = TIPS.map(makeTipCard).join('');
+
+// Count
+const total = Object.values(DATA).reduce((a, s) => a + s.commands.length, 0);
+document.getElementById('total-count').textContent = total + '+';
+
+// Search
+const searchEl = document.getElementById('search');
+searchEl.addEventListener('input', () => {
+  const q = searchEl.value.toLowerCase();
+  let anyVisible = false;
+  document.querySelectorAll('.card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    const match = !q || text.includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) anyVisible = true;
+  });
+  document.querySelectorAll('.section[data-section]').forEach(sec => {
+    if (!sec.querySelector('[data-section="tips"]') && sec.dataset.section !== 'tips') {
+      const visCards = sec.querySelectorAll('.card');
+      if (!visCards.length) return;
+      const hasVisible = [...visCards].some(c => c.style.display !== 'none');
+      sec.style.display = hasVisible ? '' : 'none';
+    }
+  });
+  if (q) {
+    document.querySelectorAll('.section').forEach(s => {
+      if (s.dataset.section === 'tips') s.style.display = 'none';
+    });
+  } else {
+    document.querySelectorAll('.section').forEach(s => s.style.display = '');
+  }
+  document.getElementById('no-results').classList.toggle('hidden', anyVisible || !q);
+  if (!q) document.querySelectorAll('.section').forEach(s => s.style.display = '');
+});
+
+// Tabs
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    searchEl.value = '';
+    document.getElementById('no-results').classList.add('hidden');
+    const cat = tab.dataset.cat;
+    document.querySelectorAll('.section').forEach(sec => {
+      sec.querySelectorAll('.card').forEach(c => c.style.display = '');
+      if (cat === 'all') {
+        sec.style.display = '';
+      } else {
+        sec.style.display = (sec.dataset.section === cat) ? '' : 'none';
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

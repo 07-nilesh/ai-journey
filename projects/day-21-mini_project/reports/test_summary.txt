@@ -1,0 +1,23 @@
+
+================================================
+          SPOTTER: DATA HEALTH AUDIT
+================================================
+Generated on: 2026-05-11 15:50:05
+Source File:  test.csv
+------------------------------------------------
+
+📊 DIMENSIONS:
+- Total Rows:    1
+- Total Columns: 2
+
+📋 COLUMN LIST:
+hello, world
+
+🔍 NULL VALUE SUMMARY:
+hello    0
+world    1
+
+------------------------------------------------
+💡 QUICK INSIGHT:
+- Memory Usage: 0.20 KB
+================================================

@@ -10,7 +10,7 @@ A lightweight Command Line Interface (CLI) tool built during **Day 21** of my AI
 * **Timestamped Logs:** Tracks exactly when each audit was performed.
 
 ## 🛠️ Tech Stack
-* **Language:** Python 3.x
+* **Language:** Python 3.12.10
 * **Libraries:** Pandas, Argparse, Pathlib, Datetime
 
 ## 📖 How to Use

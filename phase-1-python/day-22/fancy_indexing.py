@@ -27,5 +27,5 @@ print("\n2D Selected Rows:\n", selected_rows)
 
 #2 practise
 alpha_array = np.array([100, 200, 300, 400, 500, 600, 700])
-selected_elements = alpha_array[4,1,-1]
+selected_elements = alpha_array[[4, 1, -1]]
 print("\nSelected Elements:", selected_elements)

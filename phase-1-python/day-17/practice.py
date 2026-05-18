@@ -1,15 +1,18 @@
 from contextlib import contextmanager
+from functools import wraps
+def my_logger(func):
+    import logging
+    logging.basicConfig(filename='{}.log'.format(func.__name__), level=logging.INFO)
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        logging.info('Ran with args: {}, and kwargs: {}'.format(args, kwargs))
+        return func(*args, **kwargs)
 
-@contextmanager
-def simple_file_manager(filename, mode):
-    print("Log: Opening...")
-    f = open(filename, mode)
-    try:
-        yield f
-    finally:
-        f.close()
-        print("Log: Closed!")
+    return wrapper
+@my_logger
+def read_file(filename, mode):
+    with open(filename, mode) as f:
+        return f.read()
 
-# Usage
-with simple_file_manager('practice.txt', 'r') as f:
-    print(f.read())
+content = read_file('practice.txt', 'r')
+print(content)

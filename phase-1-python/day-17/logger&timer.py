@@ -21,7 +21,7 @@ def my_timer(orig_func):
     return wrapper
 import time
 @my_timer
-@my_logger
+@my_logger # The order of decorators matters. The my_logger will be applied first, and then my_timer will wrap the result of that.
 def display_info(name, age):
     print('Display_info ran with arguments ({}, {})'.format(name,age))
 

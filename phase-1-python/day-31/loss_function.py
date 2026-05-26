@@ -38,5 +38,6 @@ print(f"Derivative of Loss with respect to predicted value: {loss_derivative:.4f
 print(f"Action: If gradient is positive ({loss_derivative}), change prediction by moving LEFT.")
 
 #update prediction using gradient descent
+#we have subracted the derivative from the predicted value to move in the direction of minimizing loss
 new_prediction = predicted_value - (learning_rate * loss_derivative)
 print(f"Updated Prediction after applying gradient descent: {new_prediction:.4f}")

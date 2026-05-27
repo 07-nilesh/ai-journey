@@ -3,7 +3,7 @@ lr = 0.1 # Learning rate
 
 for step in range(10):
     gradient = 2 * current_weight # Derivative of f(w) = w^2 is f'(w) = 2w
-    current_weight += lr * gradient # Update weight
+    current_weight -= lr * gradient # Update weight
     loss = current_weight ** 2 # Loss is f(w) = w^2
     print(f"Step {step+1}: Weight = {current_weight:.4f}, Loss = {loss:.4f}")
 

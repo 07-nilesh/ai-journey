@@ -14,7 +14,7 @@ print("First eigenvalue multiplied by the first eigenvector:", mul2)
 #variation 1
 import numpy as np
 
-dataset_matrix= np.array([[1,1],[0,1]])
+dataset_matrix= np.array([[3,0],[0,2]])
 eigenvalues, eigenvectors = np.linalg.eig(dataset_matrix)
 print("Eigenvalues:", eigenvalues)
 print("Eigenvectors:\n", eigenvectors)

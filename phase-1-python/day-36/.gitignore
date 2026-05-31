@@ -1,1 +1,3 @@
 my_ai_project/
+
+*.egg-info/

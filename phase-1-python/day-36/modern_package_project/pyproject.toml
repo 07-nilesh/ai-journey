@@ -1,0 +1,14 @@
+[build-system]
+#This tells pip to use the standard 'setuptools' engine to build your package
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# This is the actual shipping label info
+name = "my_modern_tools"
+version = "0.1.0"
+description = "My first modern Python package using pyproject.toml"
+authors = [{name = "Nilesh kashyap", email = "kashyapnilesh0711@gmail.com"}]
+# If your package needed numpy, you would put it in the brackets below!
+dependencies=[]
+

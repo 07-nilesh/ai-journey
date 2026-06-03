@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
+import csv
 
 url = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
 response = requests.get(url)
@@ -14,7 +16,18 @@ print(f"Product Description: {product_description}")
 book_rating = soup.find('p', class_='star-rating')['class'][1]  # Get the second class which indicates the rating
 print(f"Book Rating: {book_rating}")
 
-
+data = {
+    'Title': [book_title],
+    'Price': [book_price],
+    'Description': [product_description],
+    'Rating': [book_rating]
+}
+df = pd.DataFrame(data)
+# This replaces your entire 'with open()' block perfectly!
+df.to_csv("book_data.csv", index=False, encoding="utf-8")
+# Step 4: Print the DataFrame to confirm it looks like a clean table
+print("--- Scraped Data Saved to CSV successfully! View below: ---")
+print(df)
 import bs4
 mock_html = "<div><p class='main'>Hello Indore!</p></div>"
 soup = bs4.BeautifulSoup(mock_html, 'html.parser')

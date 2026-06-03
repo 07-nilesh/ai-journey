@@ -1,0 +1,20 @@
+import requests
+from bs4 import BeautifulSoup
+
+url = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+response = requests.get(url)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+book_title = soup.find('h1').text
+book_price = float(soup.find('p', class_='price_color').text.strip('Â£'))  # Remove the pound symbol and convert to float
+print(f"Book Title: {book_title}")
+print(f"Book Price: {book_price}")
+product_description = soup.find('div', id='product_description').find_next_sibling('p').text
+print(f"Product Description: {product_description}")
+
+
+import bs4
+mock_html = "<div><p class='main'>Hello Indore!</p></div>"
+soup = bs4.BeautifulSoup(mock_html, 'html.parser')
+print(soup.find('p', class_='main').text)
+

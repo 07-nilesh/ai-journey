@@ -11,6 +11,8 @@ print(f"Book Title: {book_title}")
 print(f"Book Price: {book_price}")
 product_description = soup.find('div', id='product_description').find_next_sibling('p').text
 print(f"Product Description: {product_description}")
+book_rating = soup.find('p', class_='star-rating')['class'][1]  # Get the second class which indicates the rating
+print(f"Book Rating: {book_rating}")
 
 
 import bs4

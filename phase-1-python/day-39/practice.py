@@ -30,7 +30,8 @@ try:
         print(f"Title {i+1}: {main_heading_element[i].text}")
     df = pd.DataFrame(data, columns=["Title"])
     df.to_csv("hacker_news_top10.csv", index=False, encoding="utf-8")
-    
+    print("--- Scraped Data Saved to CSV successfully! View below: ---")
+    print(df)
         
 except Exception as e:
     print(f"An error occurred while scraping the website: {e}")

@@ -15,3 +15,8 @@ env/
 
 #large datafiles
 *.csv
+
+# Ignore all zip files and archives
+*.zip
+*.tar.gz
+*.rar

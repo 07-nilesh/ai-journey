@@ -20,3 +20,5 @@ env/
 *.zip
 *.tar.gz
 *.rar
+
+mydata.*

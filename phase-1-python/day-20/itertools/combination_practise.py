@@ -15,7 +15,7 @@ for pair in feature_pairs:
 '''
 participants = ["Alice", "Bob", "Charlie", "David"]
 # We want to create unique teams of 3 for a group project
-teams = itertools.combinations(participants, 4)
+teams = itertools.combinations(participants, 3)
 
 print("Possible unique teams:")
 for team in teams:

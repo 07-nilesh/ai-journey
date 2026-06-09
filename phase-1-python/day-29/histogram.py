@@ -28,3 +28,4 @@ print("Histogram Frequencies (Bin Start : Count)")
 for bin_start, count in hist_data.items():
     # Printing a visual ASCII representation
     print(f"{bin_start:05.2f}+ | {'█' * count} ({count})")
+    

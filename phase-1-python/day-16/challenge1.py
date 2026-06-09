@@ -1,8 +1,8 @@
-'''
+
 #1
 sentences = ["I love coding in Python", "Machine Learning is the future", "Indore is a clean city"]
 word_filter=[word for sentence in sentences for word in sentence.split() if len(word)>5]
-print(word_filter)'''
+print(word_filter)
 
 #2
 members = [

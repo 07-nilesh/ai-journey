@@ -11,7 +11,7 @@ print(fullPath) # prints the full path, which will be "C:/Users/YourUsername/spa
 import os
 print(Path.cwd()) # prints the current working directory
 print(Path.home()) # prints the home directory of the current user
-os.chdir("N:\AI\phase-1-python\day-40") # changes the current working directory to "N:\AI\phase-1-python\day-40"
+#os.chdir("N:\AI\phase-1-python\day-40") # changes the current working directory to "N:\AI\phase-1-python\day-40"
 print(Path.cwd()) # prints the new current working directory after changing it to "N:\AI\phase-1-python"
 
 #os.makedirs("N:/AI/phase-1-python/day-40/made_folder") # creates a new directory called "some_folder" in the specified path

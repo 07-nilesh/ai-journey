@@ -1,0 +1,30 @@
+{
+    "students": [
+        {
+            "name": "nilesh",
+            "age": 21,
+            "email": "nilesh@gmail.com",
+            "roll_no": "23",
+            "grades": {
+                "python": 75.0,
+                "java": 75.0
+            }
+        },
+        {
+            "name": "gajju",
+            "age": 21,
+            "email": "gajju@gmail.com",
+            "roll_no": "31",
+            "grades": {}
+        }
+    ],
+    "teachers": [
+        {
+            "name": "rahul ",
+            "age": 35,
+            "email": "rahul@gmail.com",
+            "subject": "python",
+            "emp_id": "420"
+        }
+    ]
+}
